@@ -1,19 +1,31 @@
 import express from "express";
+import formidable from "express-formidable";
+import { promises as fs } from "fs";
 
 const app = express();
-app.get("/", (req, res) => {
-  res.send("Yay Node Girls!");
+
+app.use(express.static("public"));
+
+app.use(formidable());
+
+app.post("/create-post", async (req, res) => {
+  console.log(req.fields);
+
+  const updatedData = await fs.readFile(
+    "./data/posts.json").then((file) => {
+    const parsedFile = JSON.parse(file);
+    return parsedFile;
+  });
+  updatedData[Date.now()] = req.fields.blogpost;
+  fs.writeFile("./data/posts.json", JSON.stringify(updatedData)).then(() => {
+    res.send(updatedData);
+  });
 });
 
-app.get("/node", (req, res) => {
-  res.send("You have typed node as endpoint");
+app.get("/get-posts", (req, res) => {
+  res.sendFile("./data/posts.json");
 });
 
-app.get("/girls", (req, res) => {
-    res.send("You have reached the girls endpoint!");
-});
-
-app.use(express.static(""))
 app.listen(3000, () => {
   console.log("Server is listening on port 3000. Ready to accept requests!");
 });

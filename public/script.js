@@ -56,14 +56,15 @@ function getBlogposts (url) {
     });
 }
 
-function addBlogpostsToPage (data) {
+function addBlogpostsToPage(data) {
+    var postContainer = document.querySelector(".post-container");
+    postContainer.innerHTML = "";
     for (var blogpost in data) {
         if (data.hasOwnProperty(blogpost)) {
 
             var postDiv         = document.createElement('div');
             var postText        = document.createElement('p');
             var thumbnail       = document.createElement('img');
-            var postContainer   = document.querySelector('.post-container');
 
             thumbnail.src = "./img/logo2.png";
             thumbnail.className = "thumbnail";
